@@ -1,6 +1,11 @@
-import React, { useState } from 'react';
+ import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { createManpowerRequest } from '../Redux/Slices/jobApplicationSlice'; 
+import { toast } from 'react-toastify';
 
 const CompanyRequsting = () => {
+  const dispatch = useDispatch();
+   const user_id = localStorage.getItem("user_is");
   const [formData, setFormData] = useState({
     companyName: '',
     contactPerson: '',
@@ -17,7 +22,8 @@ const CompanyRequsting = () => {
     workLocation: '',
     shiftTiming: '',
     salary: '',
-    notes: ''
+    notes: '',
+    user_id: user_id || '', 
   });
 
   const handleChange = (e) => {
@@ -25,11 +31,37 @@ const CompanyRequsting = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitted:", formData);
-    alert("Manpower Request Submitted Successfully!");
-    // Here, you can send `formData` to backend or Firebase
+    try {
+      const result = await dispatch(createManpowerRequest(formData)).unwrap();
+      toast.success("Manpower Request Submitted Successfully!");
+      console.log("Submitted:", result);
+
+      // Reset Form
+      setFormData({
+        companyName: '',
+        contactPerson: '',
+        designation: '',
+        mobile: '',
+        whatsapp: '',
+        email: '',
+        address: '',
+        city: '',
+        pincode: '',
+        typeOfWork: '',
+        workersNeeded: '',
+        skillRequired: '',
+        workLocation: '',
+        shiftTiming: '',
+        salary: '',
+        notes: '',
+        user_id: user_id || '',
+
+      });
+    } catch (error) {
+      toast.error(`Submission failed: ${error.message || "Something went wrong"}`);
+    }
   };
 
   return (
@@ -38,76 +70,28 @@ const CompanyRequsting = () => {
       <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 rounded-lg shadow">
         {/* Company Details */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block font-medium">Company Name</label>
-            <input type="text" name="companyName" onChange={handleChange} required className="input" />
-          </div>
-          <div>
-            <label className="block font-medium">Contact Person Name</label>
-            <input type="text" name="contactPerson" onChange={handleChange} required className="input" />
-          </div>
-          <div>
-            <label className="block font-medium">Designation</label>
-            <input type="text" name="designation" onChange={handleChange} required className="input" />
-          </div>
-          <div>
-            <label className="block font-medium">Mobile Number</label>
-            <input type="tel" name="mobile" onChange={handleChange} required className="input" />
-          </div>
-          <div>
-            <label className="block font-medium">WhatsApp Number (optional)</label>
-            <input type="tel" name="whatsapp" onChange={handleChange} className="input" />
-          </div>
-          <div>
-            <label className="block font-medium">Email ID</label>
-            <input type="email" name="email" onChange={handleChange} required className="input" />
-          </div>
-          <div>
-            <label className="block font-medium">Company Address</label>
-            <input type="text" name="address" onChange={handleChange} required className="input" />
-          </div>
-          <div>
-            <label className="block font-medium">City / District</label>
-            <input type="text" name="city" onChange={handleChange} required className="input" />
-          </div>
-          <div>
-            <label className="block font-medium">Pincode</label>
-            <input type="text" name="pincode" onChange={handleChange} required className="input" />
-          </div>
+          <input type="text" name="companyName" value={formData.companyName} onChange={handleChange} placeholder="Company Name" required className="input" />
+          <input type="text" name="contactPerson" value={formData.contactPerson} onChange={handleChange} placeholder="Contact Person Name" required className="input" />
+          <input type="text" name="designation" value={formData.designation} onChange={handleChange} placeholder="Designation" required className="input" />
+          <input type="tel" name="mobile" value={formData.mobile} onChange={handleChange} placeholder="Mobile Number" required className="input" />
+          <input type="tel" name="whatsapp" value={formData.whatsapp} onChange={handleChange} placeholder="WhatsApp Number" className="input" />
+          <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Email ID" required className="input" />
+          <input type="text" name="address" value={formData.address} onChange={handleChange} placeholder="Company Address" required className="input" />
+          <input type="text" name="city" value={formData.city} onChange={handleChange} placeholder="City / District" required className="input" />
+          <input type="text" name="pincode" value={formData.pincode} onChange={handleChange} placeholder="Pincode" required className="input" />
         </div>
 
         {/* Manpower Requirement */}
         <hr className="my-4" />
         <h2 className="text-lg font-semibold text-gray-700">Manpower Requirement</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block font-medium">Type of Work</label>
-            <input type="text" name="typeOfWork" onChange={handleChange} required className="input" />
-          </div>
-          <div>
-            <label className="block font-medium">Number of Workers Needed</label>
-            <input type="number" name="workersNeeded" onChange={handleChange} required className="input" />
-          </div>
-          <div>
-            <label className="block font-medium">Skill / Qualification Required</label>
-            <input type="text" name="skillRequired" onChange={handleChange} required className="input" />
-          </div>
-          <div>
-            <label className="block font-medium">Work Location / Site Address</label>
-            <input type="text" name="workLocation" onChange={handleChange} required className="input" />
-          </div>
-          <div>
-            <label className="block font-medium">Shift Timing</label>
-            <input type="text" name="shiftTiming" onChange={handleChange} required className="input" />
-          </div>
-          <div>
-            <label className="block font-medium">Salary Offered (per day/month)</label>
-            <input type="text" name="salary" onChange={handleChange} required className="input" />
-          </div>
-          <div className="md:col-span-2">
-            <label className="block font-medium">Additional Notes (optional)</label>
-            <textarea name="notes" rows="3" onChange={handleChange} className="input"></textarea>
-          </div>
+          <input type="text" name="typeOfWork" value={formData.typeOfWork} onChange={handleChange} placeholder="Type of Work" required className="input" />
+          <input type="number" name="workersNeeded" value={formData.workersNeeded} onChange={handleChange} placeholder="Workers Needed" required className="input" />
+          <input type="text" name="skillRequired" value={formData.skillRequired} onChange={handleChange} placeholder="Skill Required" required className="input" />
+          <input type="text" name="workLocation" value={formData.workLocation} onChange={handleChange} placeholder="Work Location" required className="input" />
+          <input type="text" name="shiftTiming" value={formData.shiftTiming} onChange={handleChange} placeholder="Shift Timing" required className="input" />
+          <input type="text" name="salary" value={formData.salary} onChange={handleChange} placeholder="Salary Offered" required className="input" />
+          <textarea name="notes" rows="3" value={formData.notes} onChange={handleChange} placeholder="Additional Notes (optional)" className="input md:col-span-2" />
         </div>
 
         {/* Submit Button */}

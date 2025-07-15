@@ -1,12 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import api from '../../interceptors/axiosInterceptor';
+import api from '../../../interceptors/axiosInterceptor'; // Adjust path as needed
 
 // 🔁 Create a Manpower Request
 export const createManpowerRequest = createAsyncThunk(
   'manpower/create',
   async (formData, thunkAPI) => {
     try {
-      const response = await api.post('/manpower-request', formData);
+      const response = await api.post('/manpower', formData);
       return response.data.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
@@ -19,7 +19,7 @@ export const fetchManpowerRequests = createAsyncThunk(
   'manpower/fetchAll',
   async (_, thunkAPI) => {
     try {
-      const response = await api.get('/manpower-request');
+      const response = await api.get('/manpower');
       return response.data.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
@@ -58,7 +58,7 @@ export const deleteManpowerRequest = createAsyncThunk(
   'manpower/delete',
   async (id, thunkAPI) => {
     try {
-      await api.delete(`/manpower-request/${id}`);
+      await api.delete(`/manpower/${id}`);
       return id;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
