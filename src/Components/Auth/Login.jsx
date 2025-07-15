@@ -1,20 +1,28 @@
+
 import React, { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import logo from "../../assets/logo.png"
+import logo from "../../assets/logo.png";
+import axios from 'axios';
+import BASE_URL from '../../../utils/Config';
+
 const JobPortalAuth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [role, setRole] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showSignupForm, setShowSignupForm] = useState(false);
 
   const [formData, setFormData] = useState({
+    name: '',
     email: '',
-    password: ''
+    password: '',
+    confirmPassword: ''
   });
 
   const navigate = useNavigate();
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     const { email, password } = formData;
 
     if (!email || !password) {
@@ -22,42 +30,101 @@ const JobPortalAuth = () => {
       return;
     }
 
-    let role = null;
+    setIsLoading(true);
+    try {
+      const response = await axios.post(`${BASE_URL}/user/login`, {
+        email,
+        password
+      });
 
-    if (email === "admin@gmail.com" && password === "admin@123") {
-      role = "admin";
-    } else if (email === "employer@gmail.com" && password === "employer@123") {
-      role = "employer";
-    } else if (email === "employee@gmail.com" && password === "employee@123") {
-      role = "employee";
-    } else {
-      toast.error("Invalid credentials!");
+      const { role, token, id } = response.data.data;
+      const { message } = response.data;
+
+      localStorage.setItem("login_details", JSON.stringify({ 
+        id,
+        role, 
+        token,
+        email
+      }));
+
+      toast.success(message || `Login successful as ${role.charAt(0).toUpperCase() + role.slice(1)}`);
+
+      setTimeout(() => {
+        if (role === "admin") {
+          navigate("/dashboard");
+        } else if (role === "employer") {
+          navigate("/employer/employerDash");
+        } else if (role === "employee") {
+          navigate("/employee/employeDash");
+        }
+      }, 1500);
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Login failed. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSignup = async () => {
+    const { name, email, password, confirmPassword } = formData;
+
+    if (!name || !email || !password || !confirmPassword) {
+      toast.error("Please fill all fields");
       return;
     }
 
-    localStorage.setItem("login_details", JSON.stringify({ role }));
+    if (password !== confirmPassword) {
+      toast.error("Passwords don't match");
+      return;
+    }
 
-    toast.success(`Login successful as ${role.charAt(0).toUpperCase() + role.slice(1)}`);
+    setIsLoading(true);
+    try {
+      const response = await axios.post(`${BASE_URL}/user/signup`, {
+        name,
+        email,
+        password,
+        role
+      });
 
-    setTimeout(() => {
-      if (role === "admin") {
-        navigate("/dashboard");
-      } else if (role === "employer") {
-        navigate("/employer/employerDash");
-      } else if (role === "employee") {
-        navigate("/employee/employeDash");
-      }
-    }, 1500);
+      toast.success("Account created successfully! Please login.");
+      setIsLogin(true);
+      setShowSignupForm(false);
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Signup failed. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
+  const handleRoleSelection = (selectedRole) => {
+    setRole(selectedRole);
+    setShowSignupForm(true);
+  };
 
   const togglePage = () => {
     setIsLogin(!isLogin);
+    setRole(null);
+    setShowSignupForm(false);
+    setFormData({
+      name: '',
+      email: '',
+      password: '',
+      confirmPassword: ''
+    });
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
   };
 
   return (
     <>
-      <style jsx>{`
+       <style jsx>{`
         .auth-container {
           min-height: 100vh;
           background: #f8fafc;
@@ -408,11 +475,6 @@ const JobPortalAuth = () => {
               <div className="profile-circle large circle-6">
                 <div className="profile-img"></div>
               </div>
-
-
-              {/* <!-- Rest of profile-circles and content... --> */}
-
-
             </div>
 
             <div className="left-content">
@@ -420,8 +482,8 @@ const JobPortalAuth = () => {
               <img
                 src={logo}
                 alt="Star Force Logo"
+                className="absolute top-0 left-0 object-contain"
                 style={{ width: "200px", marginTop: "-20px" }}
-                className="absolute top-0 left-0  object-contain"
               />
               <p className="left-subtitle">
                 Connect with top employers and discover opportunities that match your skills and aspirations.
@@ -429,161 +491,180 @@ const JobPortalAuth = () => {
             </div>
           </div>
 
-
-
           {/* Right Section - Form */}
           <div className="right-section">
-
             <h1 className="auth-title">
-              {isLogin ? 'Login' : 'Create Your Star Force Account'}
+              {isLogin ? 'Login' : 'Create Your Account'}
             </h1>
             <p className="auth-subtitle">
               {isLogin ? 'Welcome back! Please enter your details.' : 'Get started with your free account today.'}
             </p>
-            {!isLogin && (
+
+            {isLogin ? (
               <>
-                <h5 className="text-center text-lg font-semibold mb-3 text-gray-700">Select a Role</h5>
-                <div className="flex justify-center gap-6 mb-6">
-                  <div
-                    className={`cursor-pointer p-4 border rounded-xl text-center transition duration-200 ${role === 'employee' ? 'bg-blue-100 border-blue-500' : 'border-gray-300'}`}
-                    onClick={() => setRole('employee')}
-                  >
-                    <img src="https://cdn-icons-png.flaticon.com/512/1077/1077012.png" alt="Employee" className="w-12 h-12 mx-auto" />
-                    <p className="mt-2 font-medium text-sm">Employee</p>
-                  </div>
-                  <div
-                    className={`cursor-pointer p-4 border rounded-xl text-center transition duration-200 ${role === 'employer' ? 'bg-blue-100 border-blue-500' : 'border-gray-300'}`}
-                    onClick={() => setRole('employer')}
-                  >
-                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Employer" className="w-12 h-12 mx-auto" />
-                    <p className="mt-2 font-medium text-sm">Employer</p>
-                  </div>
+                <div className="form-group">
+                  <label className="form-label">Email</label>
+                  <input
+                    type="email"
+                    name="email"
+                    className="form-control"
+                    placeholder="Enter your email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                  />
                 </div>
+
+                <div className="form-group">
+                  <label className="form-label">Password</label>
+                  <input
+                    type="password"
+                    name="password"
+                    className="form-control"
+                    placeholder="••••••••"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                  />
+                </div>
+
+                <div className="remember-forgot">
+                  <div className="form-check">
+                    <input className="form-check-input" type="checkbox" id="remember" />
+                    <label className="form-check-label ms-3 p-1" htmlFor="remember">
+                      Remember me
+                    </label>
+                  </div>
+                  <a href="#" className="forgot-link">Forgot password?</a>
+                </div>
+
+                <button
+                  className="btn-primary"
+                  onClick={handleLogin}
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  ) : (
+                    'Login'
+                  )}
+                </button>
+              </>
+            ) : (
+              <>
+                <h5 className="text-center text-lg font-semibold mb-3 text-gray-700">
+                  {showSignupForm ? '' : 'Select a Role'}
+                </h5>
+                
+                {!showSignupForm ? (
+                  <div className="flex justify-center gap-6 mb-6">
+                    <div
+                      className={`cursor-pointer p-4 border rounded-xl text-center transition duration-200 ${role === 'employee' ? 'bg-blue-100 border-blue-500' : 'border-gray-300'}`}
+                      onClick={() => handleRoleSelection('employee')}
+                    >
+                      <img src="https://cdn-icons-png.flaticon.com/512/1077/1077012.png" alt="Employee" className="w-12 h-12 mx-auto" />
+                      <p className="mt-2 font-medium text-sm">Employee</p>
+                    </div>
+                    <div
+                      className={`cursor-pointer p-4 border rounded-xl text-center transition duration-200 ${role === 'employer' ? 'bg-blue-100 border-blue-500' : 'border-gray-300'}`}
+                      onClick={() => handleRoleSelection('employer')}
+                    >
+                      <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Employer" className="w-12 h-12 mx-auto" />
+                      <p className="mt-2 font-medium text-sm">Employer</p>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <div className="mb-4">
+                      <label className="block text-gray-600 text-sm mb-1">
+                        {role === 'employee' ? 'Full Name' : 'Company Name'}
+                      </label>
+                      <input
+                        type="text"
+                        name="name"
+                        className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-blue-400"
+                        placeholder={role === 'employee' ? 'Enter full name' : 'Enter company name'}
+                        value={formData.name}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label className="form-label">Email</label>
+                      <input
+                        type="email"
+                        name="email"
+                        className="form-control"
+                        placeholder="Enter your email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label className="form-label">Password</label>
+                      <input
+                        type="password"
+                        name="password"
+                        className="form-control"
+                        placeholder="••••••••"
+                        value={formData.password}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label className="form-label">Confirm Password</label>
+                      <input
+                        type="password"
+                        name="confirmPassword"
+                        className="form-control"
+                        placeholder="••••••••"
+                        value={formData.confirmPassword}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+
+                    <button
+                      type="button"
+                      className="text-blue-500 text-sm mb-4"
+                      onClick={() => setShowSignupForm(false)}
+                    >
+                      ← Change Role
+                    </button>
+
+                    <button
+                      className="btn-primary"
+                      onClick={handleSignup}
+                      disabled={isLoading}
+                    >
+                      {isLoading ? (
+                        <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                      ) : (
+                        'Sign up'
+                      )}
+                    </button>
+                  </>
+                )}
               </>
             )}
 
-            {/* Form */}
-            <div>
-              {/* Show this block only in SignUp + Role selected */}
-              {!isLogin && role && (
-                <>
-                  <div className="mb-4">
-                    <label className="block text-gray-600 text-sm mb-1">
-                      {role === 'employee' ? 'Full Name' : 'Company Name'}
-                    </label>
-                    <input
-                      type="text"
-                      className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-blue-400"
-                      placeholder={role === 'employee' ? 'Enter full name' : 'Enter company name'}
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <label className="form-label">Email</label>
-                    <input
-                      type="email"
-                      className="form-control"
-                      placeholder="Enter your email"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <label className="form-label">Password</label>
-                    <input
-                      type="password"
-                      className="form-control"
-                      placeholder="••••••••"
-                      value={formData.password}
-                      onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <label className="form-label">Confirm Password</label>
-                    <input
-                      type="password"
-                      className="form-control"
-                      placeholder="••••••••"
-                    />
-                  </div>
-                </>
-              )}
-
-              {/* Login form should always be visible (no role selection needed) */}
-              {isLogin && (
-                <>
-                  <div className="form-group">
-                    <label className="form-label">Email</label>
-                    <input
-                      type="email"
-                      className="form-control"
-                      placeholder="Enter your email"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <label className="form-label">Password</label>
-                    <input
-                      type="password"
-                      className="form-control"
-                      placeholder="••••••••"
-                      value={formData.password}
-                      onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    />
-                  </div>
-
-                  <div className="remember-forgot">
-                    <div className="form-check">
-                      <input className="form-check-input" type="checkbox" id="remember" />
-                      <label className="form-check-label ms-3 p-1" htmlFor="remember">
-                        Remember me
-                      </label>
-                    </div>
-                    <a href="#" className="forgot-link">Forgot password?</a>
-                  </div>
-                </>
-              )}
-
-              {/* Common submit button */}
-              <button
-                className="btn-primary"
-                onClick={isLogin ? handleLogin : null}
-              >
-                {isLogin ? 'Login' : 'Sign up'}
-              </button>
-            </div>
-
-
-
-
-
-            {/* Toggle */}
             <div className="toggle-text">
               {isLogin ? "Don't have an account?" : "Already have an account?"}{' '}
               <a href="#" className="toggle-link" onClick={(e) => { e.preventDefault(); togglePage(); }}>
                 {isLogin ? 'Sign up' : 'Login'}
               </a>
             </div>
+
             {isLogin && (
               <div className="remember-forgot d-flex justify-content-center mt-3">
                 <Link to="/OtherInquiry" className="forgot-link text-decoration-none text-secondary d-flex align-items-center">
-
-                  Other Inquiries    <i className="bi bi-question-circle ms-2"></i>
+                  Other Inquiries <i className="bi bi-question-circle ms-2"></i>
                 </Link>
               </div>
             )}
-
           </div>
         </div>
       </div>
 
-      {/* Bootstrap 5 CSS */}
       <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
         rel="stylesheet"
@@ -593,7 +674,6 @@ const JobPortalAuth = () => {
 };
 
 export default JobPortalAuth;
-
 
 
 
