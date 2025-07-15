@@ -1,6 +1,6 @@
-// const BASE_URL = "https://ssknf82q-8000.inc1.devtunnels.ms/api/d1"
+const BASE_URL = "https://zq9z4j9n-5008.inc1.devtunnels.ms/api"
 
 
-const BASE_URL = "https://dealership-production.up.railway.app/api/d1"
+
 
 export default BASE_URL;
