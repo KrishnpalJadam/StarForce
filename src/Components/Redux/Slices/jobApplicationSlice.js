@@ -1,12 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import api from '../../../interceptors/axiosInterceptor'; // Adjust path as needed
+import api from '../../../interceptors/axiosInterceptor'; // adjust path
 
-// 🔁 Create a Manpower Request
-export const createManpowerRequest = createAsyncThunk(
-  'manpower/create',
+// 1️⃣ Create Job Application
+export const createJobApplication = createAsyncThunk(
+  'jobApplication/create',
   async (formData, thunkAPI) => {
     try {
-      const response = await api.post('/manpower', formData);
+      const response = await api.post('/jobApplication', formData); // POST endpoint
       return response.data.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
@@ -14,12 +14,12 @@ export const createManpowerRequest = createAsyncThunk(
   }
 );
 
-// 📥 Get All Manpower Requests
-export const fetchManpowerRequests = createAsyncThunk(
-  'manpower/fetchAll',
+// 2️⃣ Fetch All Applications
+export const fetchAllApplications = createAsyncThunk(
+  'jobApplication/fetchAll',
   async (_, thunkAPI) => {
     try {
-      const response = await api.get('/manpower');
+      const response = await api.get('/jobApplication');
       return response.data.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
@@ -27,12 +27,12 @@ export const fetchManpowerRequests = createAsyncThunk(
   }
 );
 
-// 📥 Get Single Manpower Request
-export const fetchManpowerById = createAsyncThunk(
-  'manpower/fetchById',
+// 3️⃣ Get Application by ID
+export const fetchApplicationById = createAsyncThunk(
+  'jobApplication/fetchById',
   async (id, thunkAPI) => {
     try {
-      const response = await api.get(`/manpower-request/${id}`);
+      const response = await api.get(`/jobApplication/${id}`);
       return response.data.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
@@ -40,12 +40,12 @@ export const fetchManpowerById = createAsyncThunk(
   }
 );
 
-// 🔄 Update Manpower Request
-export const updateManpowerRequest = createAsyncThunk(
-  'manpower/update',
+// 4️⃣ Update Application
+export const updateJobApplication = createAsyncThunk(
+  'jobApplication/update',
   async ({ id, updatedData }, thunkAPI) => {
     try {
-      const response = await api.put(`/manpower-request/${id}`, updatedData);
+      const response = await api.put(`/jobApplication/${id}`, updatedData);
       return response.data.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
@@ -53,12 +53,12 @@ export const updateManpowerRequest = createAsyncThunk(
   }
 );
 
-// 🗑 Delete Manpower Request
-export const deleteManpowerRequest = createAsyncThunk(
-  'manpower/delete',
+// 5️⃣ Delete Application
+export const deleteJobApplication = createAsyncThunk(
+  'jobApplication/delete',
   async (id, thunkAPI) => {
     try {
-      await api.delete(`/manpower/${id}`);
+      await api.delete(`/jobApplication/${id}`);
       return id;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
@@ -67,90 +67,90 @@ export const deleteManpowerRequest = createAsyncThunk(
 );
 
 // 🧠 Slice
-const manpowerSlice = createSlice({
-  name: 'manpower',
+const jobApplicationSlice = createSlice({
+  name: 'jobApplication',
   initialState: {
-    requests: [],
-    selectedRequest: null,
+    applications: [],
+    selectedApplication: null,
     loading: false,
     error: null,
   },
   reducers: {
-    clearSelectedRequest: (state) => {
-      state.selectedRequest = null;
+    clearSelectedApplication: (state) => {
+      state.selectedApplication = null;
     },
   },
   extraReducers: (builder) => {
     builder
       // Create
-      .addCase(createManpowerRequest.pending, (state) => {
+      .addCase(createJobApplication.pending, (state) => {
         state.loading = true;
       })
-      .addCase(createManpowerRequest.fulfilled, (state, action) => {
+      .addCase(createJobApplication.fulfilled, (state, action) => {
         state.loading = false;
-        state.requests.push(action.payload);
+        state.applications.push(action.payload);
       })
-      .addCase(createManpowerRequest.rejected, (state, action) => {
+      .addCase(createJobApplication.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
 
       // Get All
-      .addCase(fetchManpowerRequests.pending, (state) => {
+      .addCase(fetchAllApplications.pending, (state) => {
         state.loading = true;
       })
-      .addCase(fetchManpowerRequests.fulfilled, (state, action) => {
+      .addCase(fetchAllApplications.fulfilled, (state, action) => {
         state.loading = false;
-        state.requests = action.payload;
+        state.applications = action.payload;
       })
-      .addCase(fetchManpowerRequests.rejected, (state, action) => {
+      .addCase(fetchAllApplications.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
 
       // Get By ID
-      .addCase(fetchManpowerById.pending, (state) => {
+      .addCase(fetchApplicationById.pending, (state) => {
         state.loading = true;
       })
-      .addCase(fetchManpowerById.fulfilled, (state, action) => {
+      .addCase(fetchApplicationById.fulfilled, (state, action) => {
         state.loading = false;
-        state.selectedRequest = action.payload;
+        state.selectedApplication = action.payload;
       })
-      .addCase(fetchManpowerById.rejected, (state, action) => {
+      .addCase(fetchApplicationById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
 
       // Update
-      .addCase(updateManpowerRequest.pending, (state) => {
+      .addCase(updateJobApplication.pending, (state) => {
         state.loading = true;
       })
-      .addCase(updateManpowerRequest.fulfilled, (state, action) => {
+      .addCase(updateJobApplication.fulfilled, (state, action) => {
         state.loading = false;
-        state.requests = state.requests.map((req) =>
-          req.id === action.payload.id ? action.payload : req
+        state.applications = state.applications.map((app) =>
+          app.id === action.payload.id ? action.payload : app
         );
       })
-      .addCase(updateManpowerRequest.rejected, (state, action) => {
+      .addCase(updateJobApplication.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
 
       // Delete
-      .addCase(deleteManpowerRequest.pending, (state) => {
+      .addCase(deleteJobApplication.pending, (state) => {
         state.loading = true;
       })
-      .addCase(deleteManpowerRequest.fulfilled, (state, action) => {
+      .addCase(deleteJobApplication.fulfilled, (state, action) => {
         state.loading = false;
-        state.requests = state.requests.filter((req) => req.id !== action.payload);
+        state.applications = state.applications.filter((app) => app.id !== action.payload);
       })
-      .addCase(deleteManpowerRequest.rejected, (state, action) => {
+      .addCase(deleteJobApplication.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
   },
 });
 
-export const { clearSelectedRequest } = manpowerSlice.actions;
+export const { clearSelectedApplication } = jobApplicationSlice.actions;
 
-export default manpowerSlice.reducer;
+export default jobApplicationSlice.reducer;

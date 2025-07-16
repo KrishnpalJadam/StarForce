@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchManpowerRequests,
   deleteManpowerRequest
-} from '../Redux/Slices/jobApplicationSlice';
+} from '../Redux/Slices/manpowerSlice';
 
 const ITEMS_PER_PAGE = 10;
 

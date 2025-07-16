@@ -1,11 +1,11 @@
  import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { createManpowerRequest } from '../Redux/Slices/jobApplicationSlice'; 
+import { createManpowerRequest } from '../Redux/Slices/manpowerSlice'; 
 import { toast } from 'react-toastify';
 
 const CompanyRequsting = () => {
   const dispatch = useDispatch();
-   const user_id = localStorage.getItem("user_is");
+   const user_id = localStorage.getItem("user_id");
   const [formData, setFormData] = useState({
     companyName: '',
     contactPerson: '',

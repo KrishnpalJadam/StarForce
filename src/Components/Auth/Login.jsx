@@ -46,7 +46,7 @@ const JobPortalAuth = () => {
         token,
         email
       }));
-      localStorage.setItem("user_is",id)
+      localStorage.setItem("user_id",id)
 
       toast.success(message || `Login successful as ${role.charAt(0).toUpperCase() + role.slice(1)}`);
 
