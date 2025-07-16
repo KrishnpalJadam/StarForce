@@ -6,6 +6,8 @@ import logo from "../assets/logo.png";
 import axios from "axios";
 import BASE_URL from "../../utils/Config";
 import api from "../../utils/axiosInterceptor";
+import { useAuth } from "../Components/Auth/AuthContext"; // adjust path
+import { useCallback } from "react";
 const Header = ({ onToggleSidebar }) => {
   const storedUser = JSON.parse(localStorage.getItem("login_detail"));
   const userId = storedUser ? storedUser.id : null;  // Safely access the ID
@@ -25,8 +27,25 @@ const Header = ({ onToggleSidebar }) => {
   //     console.log(error)
   //   }
   // }
-const userData = JSON.parse(localStorage.getItem("login_detail"));
-// console.log("Email:", userData.email);
+
+  const { logout } = useAuth(); // removes "login_detail" from context/localStorage (per your impl)
+
+  const handleLogout = useCallback(() => {
+    // 1. Clear anything extra you stored
+    localStorage.removeItem("login_details"); // API login object
+    localStorage.removeItem("user_is");
+    localStorage.removeItem("employee_profile");
+    localStorage.removeItem("employer_profile");
+    // localStorage.clear(); // <-- use this instead if you truly want *everything* gone
+
+    // 2. Clear context state
+    logout(); // sets user=null in AuthContext
+
+    // 3. Hard reload to fully reset app state (Redux, caches, etc.)
+    window.location.replace("/"); // goes to login + reloads page
+  }, [logout]);
+  const userData = JSON.parse(localStorage.getItem("login_detail"));
+  // console.log("Email:", userData.email);
 
   return (
     <header className=" header position-relative headernwe">
@@ -49,7 +68,7 @@ const userData = JSON.parse(localStorage.getItem("login_detail"));
             className="img-fluid sidebar-logo"
 
           />
-         
+
         </div>
 
         {/* Synced button */}
@@ -65,7 +84,7 @@ const userData = JSON.parse(localStorage.getItem("login_detail"));
             <span className="d-none d-sm-inline text-dark">Synced</span>
           </button> */}
 
-   
+
 
 
           {/* User profile */}
@@ -91,7 +110,11 @@ const userData = JSON.parse(localStorage.getItem("login_detail"));
           {/* Logout - icon only on mobile */}
 
 
-          <Link to="/"  className="btn btn-outline-dark me-4">
+          <Link
+            to="#"
+            onClick={handleLogout}
+            className="btn btn-outline-dark me-4"
+          >
             <i className="fas fa-sign-out-alt me-1"></i> Logout
           </Link>
 

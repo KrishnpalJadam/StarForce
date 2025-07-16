@@ -23,8 +23,7 @@ const Dashboard = () => {
           {[
             { label: "Total Employers", value: 12, icon: "fas fa-building", color: "indigo" },
             { label: "Total Job Seekers", value: 158, icon: "fas fa-users", color: "blue" },
-            { label: "Active Jobs", value: 87, icon: "fas fa-briefcase", color: "green" },
-            { label: "Applications Received", value: 493, icon: "fas fa-file-alt", color: "amber" }
+           
           ].map(({ label, value, icon, color }) => (
             <div className="bg-white rounded-lg shadow p-6" key={label}>
               <div className="flex items-center">
