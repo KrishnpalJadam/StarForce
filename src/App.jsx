@@ -23,6 +23,8 @@ import Settings from './Components/StarAdmin/Settings';
 import { AuthProvider } from '../src/Components/Auth/AuthContext.jsx';
 
 import ProtectedRoute from '../src/Components/Auth/ProtectedRoute.jsx';
+import Inquires from './Components/StarAdmin/Inquires.jsx';
+import AddAdmin from './Components/StarAdmin/AddAdmin.jsx';
 
 function App() {
   return (
@@ -45,6 +47,8 @@ function App() {
             <Route path="/ManageEmployees" element={<ManageEmployees />} />
             <Route path="/ManageEmployers" element={<ManageEmployers />} />
             <Route path="/addComponies" element={<AddComponies />} />
+            <Route path="/Inquires" element={<Inquires />} />
+            <Route path="/AddAdmin" element={<AddAdmin />} />
             <Route path="/Settings" element={<Settings />} />
           </Route>
 
