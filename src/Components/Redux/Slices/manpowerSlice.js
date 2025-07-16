@@ -1,7 +1,7 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import api from '../../../interceptors/axiosInterceptor'; // Adjust path as needed
+ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import api from '../../../interceptors/axiosInterceptor'; // Adjust as needed
 
-// 🔁 Create a Manpower Request
+// 🔁 Create Manpower Request
 export const createManpowerRequest = createAsyncThunk(
   'manpower/create',
   async (formData, thunkAPI) => {
@@ -60,6 +60,19 @@ export const deleteManpowerRequest = createAsyncThunk(
     try {
       await api.delete(`/manpower/${id}`);
       return id;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
+// 🔁 Update Manpower Status
+export const updateManpowerStatus = createAsyncThunk(
+  'manpower/status',
+  async ({ id, status }, thunkAPI) => {
+    try {
+      const response = await api.patch(`/manpower/status/${id}`, { status });
+      return response.data.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
     }
@@ -145,6 +158,21 @@ const manpowerSlice = createSlice({
         state.requests = state.requests.filter((req) => req.id !== action.payload);
       })
       .addCase(deleteManpowerRequest.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // ✅ Update Status
+      .addCase(updateManpowerStatus.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(updateManpowerStatus.fulfilled, (state, action) => {
+        state.loading = false;
+        state.requests = state.requests.map((req) =>
+          req.id === action.payload.id ? action.payload : req
+        );
+      })
+      .addCase(updateManpowerStatus.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
