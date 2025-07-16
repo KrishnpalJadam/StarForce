@@ -1,9 +1,21 @@
-import React, { useState } from 'react';
-
+import React, { useState,useEffect } from 'react';
+import { fetchAllApplications } from '../Redux/Slices/jobApplicationSlice'; 
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  fetchManpowerRequests
+} from '../Redux/Slices/manpowerSlice';
 const Dashboard = () => {
   const [activeMenu, setActiveMenu] = useState('dashboard');
   const userData = JSON.parse(localStorage.getItem("login_detail"));
-
+     const dispatch = useDispatch();
+     const applications = useSelector((state) => state?.jobApplications?.applications?.length) || 0;
+       const manpowerRequests = useSelector((state) => state?.manpower?.requests?.length) || 0;
+     
+     console.log("Applications:", applications);
+      useEffect(() => {
+          dispatch(fetchAllApplications());
+          dispatch(fetchManpowerRequests());
+        }, [dispatch]);
   const getGreeting = () => {
     const hour = new Date().getHours();
     if (hour < 12) return "Good morning";
@@ -21,8 +33,8 @@ const Dashboard = () => {
         {/* Metrics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {[
-            { label: "Total Employers", value: 12, icon: "fas fa-building", color: "indigo" },
-            { label: "Total Job Seekers", value: 158, icon: "fas fa-users", color: "blue" },
+            { label: "Total Employers", value:applications, icon: "fas fa-building", color: "indigo" },
+            { label: "Total Job Seekers", value:manpowerRequests, icon: "fas fa-users", color: "blue" },
             { label: "Active Jobs", value: 87, icon: "fas fa-briefcase", color: "green" },
             { label: "Applications Received", value: 493, icon: "fas fa-file-alt", color: "amber" }
           ].map(({ label, value, icon, color }) => (
