@@ -1,11 +1,41 @@
-import React from 'react';
+ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { createInquiry } from '../Redux/Slices/inquirySlice';
 
 const OtherInquiry = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const handleBack = () => {
-    navigate('/');
+  const [formData, setFormData] = useState({
+    name: '',
+    subject: '',
+    message: '',
+    contact_information: ''
+  });
+
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [id]: value
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      await dispatch(createInquiry(formData)).unwrap();
+      // ✅ Redirect to home after success
+      navigate('/');
+    } catch (error) {
+      alert("Error submitting inquiry: " + (error.message || "Unknown error"));
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -13,30 +43,32 @@ const OtherInquiry = () => {
       <div className="card shadow-lg p-4" style={{ width: '100%', maxWidth: '500px' }}>
         <h2 className="text-center mb-4 fs-4">Other Inquiries</h2>
 
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <label htmlFor="name" className="form-label">Name</label>
-            <input type="text" className="form-control" id="name" placeholder="Your full name" />
+            <input type="text" id="name" className="form-control" value={formData.name} onChange={handleChange} required />
           </div>
 
           <div className="mb-3">
             <label htmlFor="subject" className="form-label">Subject</label>
-            <input type="text" className="form-control" id="subject" placeholder="Subject of your inquiry" />
+            <input type="text" id="subject" className="form-control" value={formData.subject} onChange={handleChange} required />
           </div>
 
           <div className="mb-3">
             <label htmlFor="message" className="form-label">Message</label>
-            <textarea className="form-control" id="message" rows="4" placeholder="Type your message..."></textarea>
+            <textarea id="message" className="form-control" rows="4" value={formData.message} onChange={handleChange} required></textarea>
           </div>
 
           <div className="mb-4">
-            <label htmlFor="contact" className="form-label">Contact Information</label>
-            <input type="text" className="form-control" id="contact" placeholder="Phone or email" />
+            <label htmlFor="contact_information" className="form-label">Contact Information</label>
+            <input type="text" id="contact_information" className="form-control" value={formData.contact_information} onChange={handleChange} required />
           </div>
 
           <div className="d-flex justify-content-between">
-            <button type="submit" className="btn btn-primary">Submit</button>
-            <button type="button" className="btn btn-secondary" onClick={handleBack}>Back to Home</button>
+            <button type="submit" className="btn btn-primary" disabled={loading}>
+              {loading ? 'Submitting...' : 'Submit'}
+            </button>
+            <button type="button" className="btn btn-secondary" onClick={() => navigate('/')}>Back to Home</button>
           </div>
         </form>
       </div>
