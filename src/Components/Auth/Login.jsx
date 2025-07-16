@@ -51,6 +51,7 @@ const handleLogin = async () => {
 
     // Store in AuthContext (very important!)
     login(loginData); // 👈 This will set user in context
+      localStorage.setItem("user_is",id)
 
     // Show success
     toast.success(message || `Login successful as ${role}`);
