@@ -8,15 +8,17 @@ const Sidebar = ({ isMobile, onLinkClick }) => {
 
 
     const [role, setRole] = useState("");
-
+    const [email, setEmail] = useState('');
     useEffect(() => {
         const storedDetails = localStorage.getItem("login_details");
         if (storedDetails) {
             const parsed = JSON.parse(storedDetails);
-            console.log("Logged in role:", parsed.role); // Output: admin
+            console.log("Login details:", parsed); // 👀 Check all available data
             setRole(parsed.role);
+            setEmail(parsed.email);
         }
     }, []);
+
 
 
 
@@ -66,8 +68,6 @@ const Sidebar = ({ isMobile, onLinkClick }) => {
 
                         {navItem("/Settings", "fas fa-cog", "Settings")}
 
-
-
                     </>
                 );
             case "employer":
@@ -84,7 +84,7 @@ const Sidebar = ({ isMobile, onLinkClick }) => {
                 return (
                     <>
                         {navItem("/employee/employeDash", "fas fa-th-large", "Dashboard")}
-                      
+
                         {navItem("/employee/AppliedJobs", "fas fa-clipboard-check", "Add Details")}
                         {navItem("/employee/MyProfile", "fas fa-user", "My Profile")}
                         {navItem("/employee/EmployeeSettings", "fas fa-cog", "Settings")}
@@ -119,7 +119,7 @@ const Sidebar = ({ isMobile, onLinkClick }) => {
             </div>
 
             {/* Footer */}
-            <div className="sidebar-footer px-3 py-3 mt-auto border-top d-flex align-items-center justify-content-between">
+            <div className="sidebar-footer px-3 py-3 mt-auto border-top d-flex align-items-center justify-content-between ">
                 <div className="d-flex align-items-center gap-2">
                     <img
                         src="https://t4.ftcdn.net/jpg/02/29/75/83/360_F_229758328_7x8jwCwjtBMmC6rgFzLFhZoEpLobB6L8.jpg"
@@ -128,10 +128,16 @@ const Sidebar = ({ isMobile, onLinkClick }) => {
                         width="40"
                         height="40"
                     />
-                    <div className=" small">
-                        <div className="fw-bold">{role?.toUpperCase()}</div>
-                        <div>user@domain.com</div>
+                    <div className="small text-end">
+                          {email && (
+                            <div className=" fw-bold">{email}</div>
+                        )}
+                        {role && (
+                            <div className="">{role}</div>
+                        )}
+                      
                     </div>
+
                 </div>
                 <button
                     className="btn btn-sm btn-outline-dark ms-2 text-dark"
