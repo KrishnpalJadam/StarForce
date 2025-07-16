@@ -1,12 +1,12 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import api from '../../../interceptors/axiosInterceptor'; // adjust path
+ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import api from '../../../interceptors/axiosInterceptor'; // adjust path as needed
 
 // 1️⃣ Create Job Application
 export const createJobApplication = createAsyncThunk(
   'jobApplication/create',
   async (formData, thunkAPI) => {
     try {
-      const response = await api.post('/jobApplication', formData); // POST endpoint
+      const response = await api.post('/jobApplication', formData);
       return response.data.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
@@ -60,6 +60,19 @@ export const deleteJobApplication = createAsyncThunk(
     try {
       await api.delete(`/jobApplication/${id}`);
       return id;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
+// 6️⃣ Update Status Only
+export const updateApplicationStatus = createAsyncThunk(
+  'jobApplication/updateStatus',
+  async ({ id, status }, thunkAPI) => {
+    try {
+      const response = await api.patch(`/jobApplication/status/${id}`, { status });
+      return { id, status };
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
     }
@@ -145,6 +158,22 @@ const jobApplicationSlice = createSlice({
         state.applications = state.applications.filter((app) => app.id !== action.payload);
       })
       .addCase(deleteJobApplication.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // Update Status
+      .addCase(updateApplicationStatus.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(updateApplicationStatus.fulfilled, (state, action) => {
+        state.loading = false;
+        const { id, status } = action.payload;
+        state.applications = state.applications.map((app) =>
+          app.id === id ? { ...app, status } : app
+        );
+      })
+      .addCase(updateApplicationStatus.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
