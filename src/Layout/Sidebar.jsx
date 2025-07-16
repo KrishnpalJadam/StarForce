@@ -130,7 +130,7 @@ const Sidebar = ({ isMobile, onLinkClick }) => {
                         width="40"
                         height="40"
                     />
-                    <div className="small text-end">
+                    <div className="small">
                           {email && (
                             <div className=" fw-bold">{email}</div>
                         )}
@@ -141,15 +141,7 @@ const Sidebar = ({ isMobile, onLinkClick }) => {
                     </div>
 
                 </div>
-                <button
-                    className="btn btn-sm btn-outline-dark ms-2 text-dark"
-                    onClick={() => {
-                        localStorage.removeItem("login_details");
-                        window.location.href = "/";
-                    }}
-                >
-                    <i className="fas fa-sign-out-alt"></i>
-                </button>
+               
             </div>
         </div>
     );
