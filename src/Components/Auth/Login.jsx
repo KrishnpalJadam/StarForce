@@ -42,16 +42,13 @@ const handleLogin = async () => {
     const { role, token, id } = response.data.data;
     const { message } = response.data;
 
-    const loginData = {
-      id,
-      role,
-      token,
-      email
-    };
-
-    // Store in AuthContext (very important!)
-    login(loginData); // 👈 This will set user in context
-      localStorage.setItem("user_is",id)
+      localStorage.setItem("login_details", JSON.stringify({ 
+        id,
+        role, 
+        token,
+        email
+      }));
+      localStorage.setItem("user_id",id)
 
     // Show success
     toast.success(message || `Login successful as ${role}`);
