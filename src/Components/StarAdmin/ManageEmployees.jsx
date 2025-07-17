@@ -56,8 +56,8 @@ const ManageEmployees = () => {
     setShowModal(true);
   };
 
-  const handleStatusChange = (id, newStatus) => {
-    setStatusMap((p) => ({ ...p, [id]: newStatus }));
+   const handleStatusChange = (id, newStatus) => {
+    dispatch(updateApplicationStatus({ id, status: newStatus }));
   };
 const formatDateWithAge = (dateStr) => {
   if (!dateStr) return '—';
@@ -181,7 +181,8 @@ const getEmployeeStatusClass = (status = "") => {
       emp.status
     )}`}
     value={emp.status || "Pending Review"}
-    onChange={(e) => console.log("Status changed:", e.target.value)}
+    onChange={(e) => handleStatusChange(emp.id, e.target.value)}
+
   >
     <option value="Pending Review">Pending Review</option>
     <option value="Under Verification">Under Verification</option>
