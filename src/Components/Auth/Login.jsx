@@ -22,52 +22,49 @@ const JobPortalAuth = () => {
   });
 
   const navigate = useNavigate();
-  const { login } = useAuth(); // Already imported - ✅ Good
+  const { login } = useAuth();  
+   const handleLogin = async () => {
+  const { email, password } = formData;
 
-  const handleLogin = async () => {
-    const { email, password } = formData;
+  if (!email || !password) {
+    toast.error("Please enter both email and password");
+    return;
+  }
 
-    if (!email || !password) {
-      toast.error("Please enter both email and password");
-      return;
-    }
+  setIsLoading(true);
+  try {
+    const response = await axios.post(`${BASE_URL}/user/login`, {
+      email,
+      password
+    });
 
-    setIsLoading(true);
-    try {
-      const response = await axios.post(`${BASE_URL}/user/login`, {
-        email,
-        password
-      });
-      console.log("Login response:", response.data);
-      const { role, token, id } = response.data.data;
-      const { message } = response.data;
+    const { role, token, id } = response.data.data;
+    const { message } = response.data;
 
-      localStorage.setItem("login_details", JSON.stringify({
-        id,
-        role,
-        token,
-        email
-      }));
-      localStorage.setItem("user_id", id)
-      localStorage.setItem("user_email", email)
-     localStorage.setItem("token",token)
+    // ✅ Save to context (required for dashboard navigation to work properly)
+    login({ id, role, token, email });
 
-      // Show success
-      toast.success(message || `Login successful as ${role}`);
+    // ✅ Also store separately if needed
+    localStorage.setItem("user_id", id);
+    localStorage.setItem("user_email", email);
+    localStorage.setItem("token", token);
 
-      // Redirect
-      setTimeout(() => {
-        if (role === "admin") navigate("/dashboard");
-        else if (role === "employer") navigate("/employer/CompanyRequsting");
-        else if (role === "employee") navigate("/employee/AppliedJobs");
-      }, 1500);
+    // ✅ Success message
+    toast.success(message || `Login successful as ${role}`);
 
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Login failed. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    // ✅ Redirect
+    setTimeout(() => {
+      if (role === "admin") navigate("/dashboard");
+      else if (role === "employer") navigate("/employer/CompanyRequsting");
+      else if (role === "employee") navigate("/employee/AppliedJobs");
+    }, 1500);
+
+  } catch (error) {
+    toast.error(error.response?.data?.message || "Login failed. Please try again.");
+  } finally {
+    setIsLoading(false);
+  }
+};
 
 
   const handleSignup = async () => {
