@@ -50,7 +50,7 @@ const JobPortalAuth = () => {
       }));
       localStorage.setItem("user_id", id)
       localStorage.setItem("user_email", email)
-
+     localStorage.setItem("token",token)
 
       // Show success
       toast.success(message || `Login successful as ${role}`);

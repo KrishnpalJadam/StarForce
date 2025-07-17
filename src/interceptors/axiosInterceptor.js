@@ -1,5 +1,5 @@
  import axios from 'axios';
-import BASE_URL from '../../utils/Config'; // ⚠️ Adjust path as needed
+import BASE_URL from '../../utils/Config'; 
 
 // Create Axios instance
 const api = axios.create({
