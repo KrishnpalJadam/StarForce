@@ -1,8 +1,8 @@
  import React, { useEffect, useState } from 'react';
 import { FaEdit, FaTrash, FaEye } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchAllApplications, updateApplicationStatus } from '../Redux/Slices/jobApplicationSlice';
-
+import { fetchAllApplications, updateApplicationStatus,deleteJobApplication } from '../Redux/Slices/jobApplicationSlice';
+import { toast } from 'react-toastify';
 const ITEMS_PER_PAGE = 6;
 
 const statusClasses = {
@@ -41,12 +41,7 @@ const ManageEmployees = () => {
     currentPage * ITEMS_PER_PAGE
   );
 
-  const handleDelete = (id) => {
-    if (window.confirm('Delete this record?')) {
-      console.log('delete', id);
-    }
-  };
-
+   
   const handleView = (emp) => {
     setSelectedEmp(emp);
     setShowModal(true);
@@ -74,6 +69,16 @@ const ManageEmployees = () => {
         return 'bg-gray-100 text-gray-700';
     }
   };
+  const handleDelete = async (id) => {
+  if (window.confirm('Delete this record?')) {
+    try {
+      const res = await dispatch(deleteJobApplication(id)).unwrap();
+      toast.success(res.message || "Deleted successfully");
+    } catch (err) {
+      toast.error(err || "Failed to delete");
+    }
+  }
+};
 
   return (
     <div className="mt-3 max-w-8xl mx-auto">
@@ -147,7 +152,7 @@ const ManageEmployees = () => {
                   </td>
                   <td className="px-4 py-3 flex gap-3 items-center">
                     <button className="text-green-600 hover:text-green-800" onClick={() => handleView(emp)} title="View Details"><FaEye /></button>
-                    <button className="text-blue-600 hover:text-blue-800" title="Edit"><FaEdit /></button>
+                    {/* <button className="text-blue-600 hover:text-blue-800" title="Edit"><FaEdit /></button> */}
                     <button className="text-red-600 hover:text-red-800" onClick={() => handleDelete(emp.id)} title="Delete"><FaTrash /></button>
                   </td>
                 </tr>
