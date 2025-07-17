@@ -38,7 +38,7 @@ const JobPortalAuth = () => {
         email,
         password
       });
-
+      console.log("Login response:", response.data);
       const { role, token, id } = response.data.data;
       const { message } = response.data;
 
@@ -49,6 +49,8 @@ const JobPortalAuth = () => {
         email
       }));
       localStorage.setItem("user_id", id)
+      localStorage.setItem("user_email", email)
+
 
       // Show success
       toast.success(message || `Login successful as ${role}`);

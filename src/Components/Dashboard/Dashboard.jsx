@@ -11,7 +11,6 @@ const Dashboard = () => {
      const applications = useSelector((state) => state?.jobApplications?.applications?.length) || 0;
        const manpowerRequests = useSelector((state) => state?.manpower?.requests?.length) || 0;
      
-     console.log("Applications:", applications);
       useEffect(() => {
           dispatch(fetchAllApplications());
           dispatch(fetchManpowerRequests());

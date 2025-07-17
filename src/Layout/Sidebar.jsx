@@ -13,7 +13,6 @@ const Sidebar = ({ isMobile, onLinkClick }) => {
         const storedDetails = localStorage.getItem("login_details");
         if (storedDetails) {
             const parsed = JSON.parse(storedDetails);
-            console.log("Login details:", parsed); // 👀 Check all available data
             setRole(parsed.role);
             setEmail(parsed.email);
         }
