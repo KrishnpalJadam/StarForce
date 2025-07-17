@@ -3,6 +3,7 @@ import { FaEdit, FaTrash, FaEye } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllApplications, updateApplicationStatus,deleteJobApplication } from '../Redux/Slices/jobApplicationSlice';
 import { toast } from 'react-toastify';
+import dayjs from 'dayjs';
 const ITEMS_PER_PAGE = 6;
 
 const statusClasses = {
@@ -58,6 +59,17 @@ const ManageEmployees = () => {
   const handleStatusChange = (id, newStatus) => {
     setStatusMap((p) => ({ ...p, [id]: newStatus }));
   };
+const formatDateWithAge = (dateStr) => {
+  if (!dateStr) return '—';
+  const dob = new Date(dateStr);
+  const age = new Date().getFullYear() - dob.getFullYear();
+  const formatted = new Intl.DateTimeFormat('en-IN', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  }).format(dob);
+  return `${formatted} (${age} yrs)`;
+};
 
   const getStatus = (emp) => statusMap[emp.id] || emp.status || 'New';
 
@@ -140,7 +152,7 @@ const getEmployeeStatusClass = (status = "") => {
                       {emp.full_name}
                     </td>
                     <td className="px-4 py-3">{emp.gender}</td>
-                    <td className="px-4 py-3">{emp.dob}</td>
+                    <td className="px-4 py-3">{dayjs(emp.dob).format('DD MMM YYYY')}</td>
                     <td className="px-4 py-3">{emp.contact_number}</td>
                     <td className="px-4 py-3">{emp.city}</td>
                     <td className="px-4 py-3">{emp.qualification}</td>
@@ -288,7 +300,7 @@ const DetailsModal = ({ emp, currentStatus, onStatusChange, onClose }) => (
       <Section title="Basic Details">
         <Detail label="Full Name" value={emp.full_name} />
         <Detail label="Gender" value={emp.gender} />
-        <Detail label="DOB / Age" value={emp.dob} />
+        <Detail label="DOB / Age" value={dayjs(emp.dob).format('DD MMM YYYY')} />
         <Detail label="Contact Number" value={emp.contact_number} />
         <Detail label="WhatsApp Number" value={emp.whatsapp} />
         <Detail label="Email" value={emp.email} />
@@ -321,7 +333,7 @@ const DetailsModal = ({ emp, currentStatus, onStatusChange, onClose }) => (
         )}
       </Section>
 
-      <Section title="Status">
+      {/* <Section title="Status">
         <select
           className={`px-3 py-2 rounded text-sm font-semibold ${statusClasses[currentStatus] || 'bg-white text-gray-800'
             }`}
@@ -334,7 +346,7 @@ const DetailsModal = ({ emp, currentStatus, onStatusChange, onClose }) => (
           <option value="Placed">Placed</option>
           <option value="Inactive">Inactive</option>
         </select>
-      </Section>
+      </Section> */}
 
       <div className="text-right mt-4">
         <button
