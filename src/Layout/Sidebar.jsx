@@ -106,7 +106,7 @@ const Sidebar = ({ isMobile, onLinkClick }) => {
             <div className="d-flex justify-content-between align-items-center py-2">
                 <button
                     type="button"
-                    className="btn btn-outline-light ms-auto d-lg-none"
+                    className="btn btn-outline-light ms-auto d-lg-none text-black"
                     onClick={handleCloseSidebar}
                     style={{ padding: '4px 10px', borderRadius: '6px' }}
                 >
@@ -130,17 +130,17 @@ const Sidebar = ({ isMobile, onLinkClick }) => {
                         height="40"
                     />
                     <div className="small">
-                          {email && (
+                        {email && (
                             <div className=" fw-bold">{email}</div>
                         )}
                         {role && (
                             <div className="">{role}</div>
                         )}
-                      
+
                     </div>
 
                 </div>
-               
+
             </div>
         </div>
     );

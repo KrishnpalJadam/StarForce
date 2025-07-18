@@ -57,7 +57,7 @@ const Header = ({ onToggleSidebar }) => {
           onClick={onToggleSidebar}
           aria-label="Toggle sidebar"
         >
-          <i className="fas fa-bars text-white"></i>
+          <i className="fas fa-bars text-dark"></i>
         </button>
 
         {/* Welcome message - hidden on mobile, visible on tablet and up */}

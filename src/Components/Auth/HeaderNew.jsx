@@ -10,7 +10,9 @@ const HeaderNew = () => {
   return (
     <>
       {/* Header */}
-      <header className="w-full bg-white shadow px-8 py-6 flex justify-between items-center">
+
+
+      <header className="w-full bg-white px-8 py-6 flex justify-between items-center newone" >
         {/* Left: Logo */}
         <div className="flex items-center gap-3">
           <img
@@ -23,7 +25,7 @@ const HeaderNew = () => {
         </div>
 
         {/* Right: Contact & Inquiry */}
-        <div className="flex items-center gap-6 text-gray-700">
+        <div className="flex items-center gap-6 text-gray-700 newone2">
           <div className="flex items-center gap-2">
             <FaPhoneAlt className="text-indigo-600" /> 
             <span>+91 98765 43210</span>
