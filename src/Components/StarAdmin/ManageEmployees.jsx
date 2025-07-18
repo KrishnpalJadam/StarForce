@@ -147,12 +147,12 @@ const getEmployeeStatusClass = (status = "") => {
               paginated.map((emp) => {
                 const st = getStatus(emp);
                 return (
-                  <tr key={emp.id}>
-                    <td className="px-4 py-3 font-semibold text-indigo-600">
+                  <tr key={emp.id} >
+                    <td className="px-4 py-3 font-semibold text-indigo-600 text-nowrap">
                       {emp.full_name}
                     </td>
                     <td className="px-4 py-3">{emp.gender}</td>
-                    <td className="px-4 py-3">{dayjs(emp.dob).format('DD MMM YYYY')}</td>
+                    <td className="px-4 py-3 text-nowrap">{dayjs(emp.dob).format('DD MMM YYYY')}</td>
                     <td className="px-4 py-3">{emp.contact_number}</td>
                     <td className="px-4 py-3">{emp.city}</td>
                     <td className="px-4 py-3">{emp.qualification}</td>

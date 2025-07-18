@@ -42,7 +42,7 @@ const Settings = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white shadow rounded-lg">
+    <div className="max-w-3xl mx-auto p-6 bg-white shadow rounded-lg mt-20">
       <h2 className="text-2xl font-semibold mb-6 text-gray-800">Account Settings</h2>
 
       {message && (
