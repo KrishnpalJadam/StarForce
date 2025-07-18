@@ -202,9 +202,11 @@ const CompanyRequsting = () => {
             onChange={handleChange}
             placeholder="Workers Needed"
             required
+            min="1"  
             className={baseInputClasses}
             style={{ '--tw-ring-color': BRAND_COLOR }}
           />
+
           <input
             type="text"
             name="skillRequired"
@@ -261,9 +263,8 @@ const CompanyRequsting = () => {
           <button
             type="submit"
             disabled={submitting}
-            className={`px-6 py-2 rounded shadow text-white transition-colors duration-150 ${
-              submitting ? 'opacity-70 cursor-not-allowed' : 'hover:opacity-90'
-            }`}
+            className={`px-6 py-2 rounded shadow text-white transition-colors duration-150 ${submitting ? 'opacity-70 cursor-not-allowed' : 'hover:opacity-90'
+              }`}
             style={{ backgroundColor: BRAND_COLOR }}
           >
             {submitting ? 'Submitting...' : 'Submit Request'}
