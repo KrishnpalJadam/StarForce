@@ -5,7 +5,7 @@ import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
 import api from "../../interceptors/axiosInterceptor";
 import BASE_URL from "../../../utils/Config";
 
-const ITEMS_PER_PAGE = 8; // ⬅️ change this if needed
+const ITEMS_PER_PAGE = 8;  
 
 const AddAdmin = () => {
   const [admins, setAdmins] = useState([]);
@@ -24,7 +24,7 @@ const AddAdmin = () => {
   useEffect(() => {
     fetchAdmins();
   }, []);
-
+  
   const fetchAdmins = async () => {
     try {
       const res = await api.get(`${BASE_URL}/user/getAllUsers`);
@@ -48,7 +48,6 @@ const AddAdmin = () => {
       confirmPassword: "",
     });
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.email || !formData.password) {
@@ -183,14 +182,14 @@ const AddAdmin = () => {
                       >
                         <FaEdit />
                       </button> */}
-                      <button
+                     {adm.id !="17" && <button
                         className="text-red-600 hover:text-red-800"
                         onClick={() => handleDelete(adm.id)}
                       >
                         <FaTrash />
-                      </button>
+                      </button> } 
                     </td>
-                  </tr>
+                  </tr> 
                 ))
               )}
             </tbody>

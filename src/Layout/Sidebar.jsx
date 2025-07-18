@@ -6,7 +6,7 @@ const Sidebar = ({ isMobile, onLinkClick }) => {
     const location = useLocation();
     const [activePath, setActivePath] = useState(location.pathname);
 
-
+   const user_id = localStorage.getItem("user_id");
     const [role, setRole] = useState("");
     const [email, setEmail] = useState('');
     useEffect(() => {
@@ -65,7 +65,7 @@ const Sidebar = ({ isMobile, onLinkClick }) => {
                         {navItem("/ManageEmployees", "fas fa-users", "Manage Employees")}
                         {navItem("/AddComponies", "fas fa-briefcase", "Companies")}
                         {navItem("/Inquires", "fas fa-clipboard-check", "Manage Inquires")}
-                        {navItem("/AddAdmin", "fas fa-clipboard-check", "Add Admin")}
+                         {user_id==="17" && navItem("/AddAdmin", "fas fa-clipboard-check", "Add Admin")}
 
                         {navItem("/Settings", "fas fa-cog", "Settings")}
 
