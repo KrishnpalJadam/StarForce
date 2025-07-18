@@ -7,6 +7,7 @@ import logo from "../../assets/logo.png";
 import axios from 'axios';
 import BASE_URL from '../../../utils/Config';
 import { useAuth } from '../Auth/AuthContext';
+import HeaderNew from './HeaderNew';
 
 const JobPortalAuth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -128,12 +129,12 @@ const JobPortalAuth = () => {
     <>
       <style jsx>{`
         .auth-container {
-          min-height: 100vh;
+          min-height: 90vh;
           background: #f8fafc;
           display: flex;
           align-items: center;
           justify-content: center;
-          padding: 20px;
+      
         }
 
         .auth-card {
@@ -453,12 +454,12 @@ const JobPortalAuth = () => {
         }
       `}</style>
       <ToastContainer position="top-right" autoClose={1500} />
-
+<HeaderNew/>
       <div className="auth-container">
         <div className="auth-card">
           {/* Left Section - Image/Visual */}
           <div className="left-section relative">
-            <div className="profile-circles mt-5">
+            <div className="profile-circles ">
               <div className="profile-circle large circle-1">
                 <div className="profile-img"></div>
               </div>
@@ -481,12 +482,7 @@ const JobPortalAuth = () => {
 
             <div className="left-content">
               <h2 className="left-title">Find Your Dream Job</h2>
-              <img
-                src={logo}
-                alt="Star Force Logo"
-                className="absolute top-0 left-0 object-contain"
-                style={{ width: "200px", marginTop: "-20px" }}
-              />
+            
               <p className="left-subtitle">
                 Connect with top employers and discover opportunities that match your skills and aspirations.
               </p>
