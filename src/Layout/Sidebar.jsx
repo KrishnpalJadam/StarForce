@@ -76,7 +76,7 @@ const Sidebar = ({ isMobile, onLinkClick }) => {
                     <>
                         {/* {navItem("employer/employerDash", "fas fa-th-large", "Dashboard")} */}
                         {navItem("/employer/CompanyRequsting", "fas fa-file-alt", "Company Requesting")}
-                        {navItem("/employer/EmployerProfile", "fas fa-user-check", "My Profile")}
+                        {/* {navItem("/employer/EmployerProfile", "fas fa-user-check", "My Profile")} */}
                         {navItem("/employer/EmployerSettings", "fas fa-cog", "Settings")}
 
                     </>
@@ -87,7 +87,7 @@ const Sidebar = ({ isMobile, onLinkClick }) => {
                         {/* {navItem("/employee/employeDash", "fas fa-th-large", "Dashboard")} */}
 
                         {navItem("/employee/AppliedJobs", "fas fa-clipboard-check", "Add Details")}
-                        {navItem("/employee/MyProfile", "fas fa-user", "My Profile")}
+                        {/* {navItem("/employee/MyProfile", "fas fa-user", "My Profile")} */}
                         {navItem("/employee/EmployeeSettings", "fas fa-cog", "Settings")}
 
                     </>

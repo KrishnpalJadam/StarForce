@@ -63,7 +63,7 @@ function App() {
           >
             <Route path="/employer/employerDash" element={<EmployerDash />} />
             <Route path="/employer/CompanyRequsting" element={<CompanyRequsting />} />
-            <Route path="/employer/EmployerSettings" element={<EmployerSettings />} />
+            <Route path="/employer/EmployerSettings" element={<Settings />} />
             <Route path="/employer/EmployerProfile" element={<EmployerProfile />} />
           </Route>
 
@@ -79,7 +79,7 @@ function App() {
             <Route path="/employee/SearchJob" element={<SearchJob />} />
             <Route path="/employee/AppliedJobs" element={<AppliedJobs />} />
             <Route path="/employee/MyProfile" element={<MyProfile />} />
-            <Route path="/employee/EmployeeSettings" element={<EmployeeSettings />} />
+            <Route path="/employee/EmployeeSettings" element={<Settings />} />
           </Route>
 
           {/* Fallback */}

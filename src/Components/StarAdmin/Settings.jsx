@@ -19,7 +19,7 @@ const Settings = () => {
     setLoading(true);
 
     try {
-      const response = await api.post("/auth/reset-password", {
+      const response = await api.post("/user/resetPassword", {
          email, 
         password,
       });

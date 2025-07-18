@@ -1,6 +1,6 @@
  import React, { useState } from "react";
 import api from "../../../interceptors/axiosInterceptor";
-// import api from "../../interceptors/axiosInterceptor";
+
 
 const EmployeeSettings = () => {
   const [password, setPassword] = useState("");

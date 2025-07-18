@@ -2,7 +2,8 @@
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { createInquiry } from '../Redux/Slices/inquirySlice';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const OtherInquiry = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -29,10 +30,16 @@ const OtherInquiry = () => {
     setLoading(true);
     try {
       await dispatch(createInquiry(formData)).unwrap();
-      // ✅ Redirect to home after success
-      navigate('/');
+     toast.success("Inquiry submitted successfully! ✅", {
+      position: "top-right",
+      autoClose: 3000
+    });
+    setTimeout(() => navigate('/'), 3500);
     } catch (error) {
-      alert("Error submitting inquiry: " + (error.message || "Unknown error"));
+      toast.error("Error submitting inquiry: " + (error.message || "Unknown error"), {
+      position: "top-right",
+      autoClose: 4000
+    });
     } finally {
       setLoading(false);
     }
@@ -40,6 +47,8 @@ const OtherInquiry = () => {
 
   return (
     <div className="container d-flex justify-content-center align-items-center vh-100">
+      <ToastContainer />
+
       <div className="card shadow-lg p-4" style={{ width: '100%', maxWidth: '500px' }}>
         <h2 className="text-center mb-4 fs-4">Other Inquiries</h2>
 
