@@ -26,13 +26,13 @@ const HeaderNew = () => {
 
         {/* Right: Contact & Inquiry */}
         <div className="flex items-center gap-6 text-gray-700 newone2">
-          <div className="flex items-center gap-2">
+          {/* <div className="flex items-center gap-2">
             <FaPhoneAlt className="text-indigo-600" /> 
             <span>+91 98765 43210</span>
-          </div>
+          </div> */}
           <div className="flex items-center gap-2">
             <FaEnvelope className="text-indigo-600" /> 
-            <span>info@starforce.com</span>
+            <span>starforcemanpower1@gmail.com</span>
           </div>
           <Link
            to="/OtherInquiry"
